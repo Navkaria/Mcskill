@@ -1,0 +1,91 @@
+/*
+	Copyright Hadrian Bell (Dev1lroot) All Rights Reserved.
+	------------------------------------------------------
+	Requirements: JQuery@3.5.1
+*/
+/* selectors */
+.dev1-select, .dev1-multiselect, .dev1-sidebar{
+	position: relative;
+	display: inline-block;
+	width: max-content;
+/*	border: 1px solid #000;
+*/	cursor: pointer;
+	user-select: none;
+}
+.dev1-select *, .dev1-multiselect *, .dev1-sidebar *{
+	vertical-align: top;
+}
+.dev1-select i, .dev1-multiselect i, .dev1-sidebar i{
+	display: inline-flex;
+	width: 32px;
+	height: 32px;
+	justify-content: center;
+	align-content: center;
+	align-self: center;
+	align-items: center;
+}
+.dev1-select > li > i, .dev1-multiselect > li > i, .dev1-sidebar > ul > a > i{
+	position: absolute;
+	right: 0px;
+	z-index: -1;
+}
+.dev1-select > ul > li{
+	padding-right: 8px;
+}
+.dev1-sidebar a{
+	display: block;
+}
+.dev1-select li, .dev1-multiselect li, .dev1-sidebar a{
+	z-index: 1;
+	line-height: 32px;
+	list-style-type: none;
+	padding: 0px 32px 0px 8px;
+}
+.dev1-select li:hover, .dev1-multiselect li:hover, .dev1-sidebar > ul > a:hover{
+	background-color: rgba(0,0,0,0.05);
+}
+.dev1-select ul, .dev1-multiselect ul{
+	position: absolute;
+	border-radius: 4px;
+	z-index: 2;
+	width: max-content;
+	height: max-content;
+	display: grid !important;
+}
+.dev1-select ul, .dev1-multiselect ul, .dev1-sidebar ul{
+	padding: 0px;
+	margin: 0px;
+	min-width: 100%;
+	list-style-type: none;
+	left: 0px;
+	top: 40px;
+}
+.dev1-select ul li.selected, .dev1-multiselect ul li.selected{
+	font-weight: bolder;
+}
+.dev1-select .hidden, .dev1-multiselect .hidden{
+	display: none !important;
+}
+/* buttons */
+.dev1-swipe-button{
+	position: relative;
+	width: 48px;
+	height: 32px;
+	background-color: rgba(0,0,0,0.05);
+	cursor: pointer;
+	border-radius: 16px;
+}
+.dev1-swipe-button div{
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	border: 4px solid #EEE;
+}
+.dev1-input input{
+	height: 32px;
+	padding: 0px 4px;
+	border: 1px solid #000;
+}

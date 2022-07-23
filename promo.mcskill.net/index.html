@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=0.5">
+	<link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/assets/main.css">
+	<link rel="stylesheet" type="text/css" href="/assets/ui.dev1lroot.css">
+	<link rel="stylesheet" type="text/css" href="/assets/lib/slick/slick.css"/>
+	<script type="text/javascript" src="/assets/jquery.js"></script>
+	<script type="text/javascript" src="/assets/lib/slick/slick.min.js"></script>
+	<script type="text/javascript" src="https://www.google.com/recaptcha/api.js?render=6LdHBwcaAAAAACyzzagMikLi-zf96YxIwcuE1CkE"></script>
+	<script type="text/javascript" src="/assets/dev1lroot.js"></script>
+	<script type="text/javascript" src="https://kit.fontawesome.com/8a5ae68a60.js" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="/assets/promocode.js"></script>
+	<script type="text/javascript" src="/assets/auth.js"></script>
+	<meta name="description" content="		Сервера MineCraft с модами и лаунчером! Сервера с Industrial 1.7.10,
+		магические и индустраиальные сервера с модами для комфортной игры!
+		Начать играть!
+	">
+	<meta name="keywords" content="		mcskill, mcckill, mkskill, мсскилл, эмсискилл,
+		minecraft, minecraft моды, minecraft mods, майнкрафт моды,
+		майнкрафт, минекрафт, индустриал крафт, индустриальный сервер minecraft,
+		технический сервер minecraft, магический сервер minecraft, сервер minecraft,
+		сервера майнкрафт, minecraft сервера, майнкрафт сервера, minecraft 1.7.10 играть,
+		майнкрафт 1.7.10, сервера minecraft с модами, сервера майнкрафт с модами,
+		сервера minecraft, скачать minecraft, майнкрафт с лаунчером
+	"/>
+	<title>McSkill - сервера Майнкрафт с модами</title>
+</head>
+<body>
+		<section class="modals">
+		<!-- modals/auth.tpl -->
+<div class="dev1-modal modal in" id="promocode" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h1>Введите ваш промокод</h1>
+				<button class="close"></button>
+				<div class="form-group row">
+					<div class="col-lg-12">
+						<input id="promocode-field" type="text" class="form-control input" placeholder="Ваш промокод">
+						<button class="playbutton d-block w-100" onclick="activatePromocode($('#promocode-field').val())">АКТИВИРОВАТЬ</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="dev1-modal modal in" id="login" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h1>Вход</h1>
+				<button class="dev1-modal-exit close"></button>
+				<div class="form-group row">
+					<div class="col-lg-12">
+						<input name="name" class="form-control" type="text" id="authUsername" placeholder="Логин">
+						<p id="errorAuthBruteforce" class="text-danger d-none">В связи с попытками взлома, ваш IP адрес был заблокирован на 24 часа</p>
+						<p id="errorAuthUsernameNotFound" class="text-danger d-none">Игрок не найден</p>
+						<p id="errorAuthUsernameMismatch" class="text-danger d-none">Неверный логин</p>
+						<p id="errorAuthUsernameDataNull" class="text-danger d-none">Логин не может быть пустым</p>
+						<input name="password" class="form-control" type="password" id="authPassword" placeholder="Пароль">
+						<p id="errorAuthPasswordMismatch" class="text-danger d-none">Неверный пароль</p>
+						<p id="errorAuthPasswordDataNull" class="text-danger d-none">Пароль не может быть пустым</p>
+						<p id="errorAuthEntranceTimeout" class="text-danger d-none">Превышен лимит попыток входа, повторите позже</p>
+						<a href="https://mcskill.net/?page=lostpass" class="d-block link mb-0">Забыли пароль?</a>
+					</div>
+					<div class="col-lg-12">
+						<button class="playbutton d-block w-100" onclick="authLogin()">ВОЙТИ</button>
+					</div>
+					<div class="col-lg-12">
+						<a class="link-center" onclick="runModal('register')">
+						Зарегистрировать</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="dev1-modal modal in" id="register" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<h1>Регистрация</h1>
+				<button class="close"></button>
+				<div class="form-group row">
+					<div class="col-lg-12">
+						<input class="form-control" type="text" id="registerEmail" placeholder="Email">
+						<p id="errorRegisterEmailMismatch" class="text-danger d-none">Неправильно введен Email</p>
+						<p id="errorRegisterEmailHasTaken" class="text-danger d-none">Этот Email уже используется</p>
+						<input class="form-control" type="text" id="registerUsername" placeholder="Логин">
+						<p id="errorRegisterUsernameTaken" class="text-danger d-none">Логин уже занят</p>
+						<p id="errorRegisterUsernameSucks" class="text-danger d-none">Недопустимый логин</p>
+						<p id="errorRegisterUsernameEmpty" class="text-danger d-none">Логин не может быть пустым</p>
+						<input class="form-control" type="password" id="registerPasswordA" placeholder="Пароль">
+						<p id="errorRegisterPasswordShort" class="text-danger d-none">
+						Пароль слишком короткий (минимум 8 символов)</p>
+						<p id="errorRegisterPasswordTEasy" class="text-danger d-none">Пароль слишком простой</p>
+						<input class="form-control" type="password" id="registerPasswordB" placeholder="Повторите пароль">
+						<p id="errorRegisterPasswordError" class="text-danger d-none">Пароли не совпадают</p>
+						<div id="promocode-section" style="display:none">
+							<input id="promocode-field" type="text" class="form-control input" placeholder="Ваш промокод">
+							<p id="errorPromocode" class="text-danger d-none">Неверный промокод</p>
+						</div>
+						<a class="link" onclick="$('#promocode-section').toggle()">У вас есть промокод?</a>
+						<div class="custom-control custom-checkbox mb-3">
+							<input data-price="-100" type="checkbox" class="custom-control-input" id="acceptToS">
+							<label class="custom-control-label" for="acceptToS">
+								Я полностью согласен и ознакомлен с 
+								<a href="https://mcskill.net/?page=faq&mode=rules" target="_blank">правилами</a> 
+								и принимаю 
+								<a href="https://mcskill.net/?page=legal" target="_blank">лицензионное соглашение</a>
+							</label>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<div id="registerButtonOff">
+							<button class="disabled playbutton d-block w-100">
+							ЗАРЕГИСТРИРОВАТЬСЯ</button>
+						</div>
+						<div id="registerButtonOn">
+							<button class="g-recaptcha playbutton d-block w-100" 
+							data-sitekey="6LdHBwcaAAAAACyzzagMikLi-zf96YxIwcuE1CkE" 
+      						data-callback='authRegister'>ЗАРЕГИСТРИРОВАТЬСЯ</button>
+						</div>
+					</div>
+					<div class="col-lg-12">
+						<a class="link-center" onclick="runModal('login')">
+						У меня уже есть аккаунт</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>	</section>
+	<section class="header" style="background-image: url(/assets/images/background.jpg);">
+				<!--<img src="/assets/images/background.jpg" width="100%">
+		<video id="video" autoplay>
+		  <source src="assets/video.mp4" type="video/mp4">
+		</video>-->
+		<div class="playnow">
+			<h1>McSkill</h1>
+			<h5>Открой для себя новый мир</h5>
+						<button class="playbutton" onclick="runModal('register')">ИГРАТЬ</button>
+					</div>
+		<div class="scrolldown">
+			<a class="dev1-scroll" data-scroll="window.innerHeight" data-time="800">
+				<p>Подробнее</p>
+				<img src="/assets/images/scrolldown.svg">
+			</a>
+		</div>
+	</section>
+	<section class="playbar dev1-scroll-fadein" data-start="window.innerHeight/2" data-shown="(window.innerHeight/3)*2" style="opacity: 0">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-sm-6 d-flex">
+					<h1>McSkill</h1>
+				</div>
+				<div class="col-lg-6 col-sm-6 d-flex justify-content-end">
+										<button class="playbutton" onclick="runModal('register')">ИГРАТЬ</button>
+									</div>
+			</div>
+		</div>
+	</section>
+	<section class="main">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1>Наши сервера</h1>
+				</div>
+				<div class="col-lg-3 server-buttons">
+											<button id="hitech">
+							<h3>HiTech</h3>
+							<h5>
+								<span class="d-inline-block" style="width:120px">
+									<i class="fas fa-user"></i> 468/1620
+								</span>
+								<i class="fas fa-server"></i> 16
+							</h5>
+						</button>
+											<button id="magic">
+							<h3>Magic</h3>
+							<h5>
+								<span class="d-inline-block" style="width:120px">
+									<i class="fas fa-user"></i> 64/200
+								</span>
+								<i class="fas fa-server"></i> 2
+							</h5>
+						</button>
+											<button id="technomagic">
+							<h3>TechnoMagic</h3>
+							<h5>
+								<span class="d-inline-block" style="width:120px">
+									<i class="fas fa-user"></i> 157/400
+								</span>
+								<i class="fas fa-server"></i> 4
+							</h5>
+						</button>
+											<button id="rpg">
+							<h3>RPG</h3>
+							<h5>
+								<span class="d-inline-block" style="width:120px">
+									<i class="fas fa-user"></i> 214/460
+								</span>
+								<i class="fas fa-server"></i> 5
+							</h5>
+						</button>
+											<button id="survival">
+							<h3>Survival</h3>
+							<h5>
+								<span class="d-inline-block" style="width:120px">
+									<i class="fas fa-user"></i> 40/200
+								</span>
+								<i class="fas fa-server"></i> 2
+							</h5>
+						</button>
+									</div>
+				<div class="col-lg-9">
+					<div class="server-info">
+						<div class="server-caption">
+							<div class="row">
+								<div class="col-lg-10 col-sm-10">
+									<div class="skew skew-left left">
+										<p class="server-description-alter"></p>
+									</div>
+								</div>
+								<div class="col-lg-2 col-sm-2">
+									<a id="serverlink" class="skew skew-right right" href="">
+										<p>Подробнее</p>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 server-btn">
+					<button onclick="window.location.href='/servers'">Смотреть все сервера</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<h1>Почему мы?</h1>
+				</div>
+				<div class="col-lg-4 reasons">
+					<div style="background-image: url(/assets/images/servers.png)"></div>
+					<h3>Более 20 серверов<br>и 1000 онлайна</h3>
+					<h5>Выбирайте сервер на свой<br> вкус и находите новых<br> друзей</h5>
+				</div>
+				<div class="col-lg-4 reasons">
+					<div style="background-image: url(/assets/images/nodonatestuff.png)"></div>
+					<h3>Нет донат вещей</h3>
+					<h5>Обычным игрокам доступны все крафты и предметы</h5>
+				</div>
+				<div class="col-lg-4 reasons">
+					<div style="background-image: url(/assets/images/customs.png)"></div>
+					<h3>Уникальные скины</h3>
+					<h5>Самописные анимированные<br>скины на броню и оружие</h5>
+				</div>
+				<div class="col-lg-4 reasons">
+					<div style="background-image: url(/assets/images/cases.png)"></div>
+					<h3>Кейсы с вещами<br>и донатом</h3>
+					<h5>Бесплатный кейс каждый<br>день за голосование</h5>
+				</div>
+				<div class="col-lg-4 reasons">
+					<div style="background-image: url(/assets/images/economy.png)"></div>
+					<h3>Развитая экономика</h3>
+					<h5>Множество игровых магазинов от игроков и администрации</h5>
+				</div>
+				<div class="col-lg-4 reasons">
+					<div style="background-image: url(/assets/images/hdskins.png)"></div>
+					<h3>HD скины и плащи</h3>
+					<h5>Бесплатно доступны всем игрокам</h5>
+				</div>
+			</div>
+		</div>
+	</section>
+	<script type="text/javascript">
+		$(window).scroll(function(){
+			if($(document).scrollTop() > window.innerHeight-120)
+			{
+				if($("#video").hasClass("off") == false)
+				{
+					$("#video").trigger('pause');
+					$("#video").addClass('off');
+				}
+			}
+			else
+			{
+				if($("#video").hasClass("off") == true)
+				{
+					$("#video").trigger('play');
+					$("#video").removeClass('off');
+				}
+			}
+		});
+		/* Контент-панель по серверам (W.I.P) */
+
+		/* Инит */
+		selectServer($(".server-buttons button").first());
+
+		/* Хэндлер */
+		$(".server-buttons").find("button").on("click",function(e){
+			selectServer(this)
+		});
+
+		/* Функция */
+		function selectServer(item){
+			$(".server-buttons").find("button").each(function(){
+				if($(this).attr("id") == $(item).attr("id")){
+					$(this).addClass("fired");
+					var image = "";
+					var serverlink = "";
+					var description = "";
+					switch ($(this).attr("id"))
+					{
+												case "hitech":
+							image = `/assets/images/data/hitech/splash.png`;
+							serverlink = `
+														/servers/hitech
+														`;
+							description = `HiTech - это индустриальная сборка с большим кол-вом технических модов. Запретов на серверах почти нет, поэтому развитие будет очень интересным и увлекательным!`;
+							break;
+												case "magic":
+							image = `/assets/images/data/magic/splash.png`;
+							serverlink = `
+														/servers/magic
+														`;
+							description = `Magic - Изучайте магические заклинания, создавайте алтари! Тут вы найдёте самые крутые магические моды, которые погрузят вас в мир волшебства и магии!`;
+							break;
+												case "technomagic":
+							image = `/assets/images/data/technomagic/splash.png`;
+							serverlink = `
+														/servers/technomagic
+														`;
+							description = `TechnoMagic - это мир, в котором соединилась магия и высокие технологии. Индустриальные моды не дадут вам заскучать ни на минуту, а магические - откроют новый неизведанный мир! `;
+							break;
+												case "rpg":
+							image = `/assets/images/data/rpg/splash.png`;
+							serverlink = `
+														/servers/rpg
+														`;
+							description = `RPG - Идеально подойдет для тех, кто жаждет настоящих приключений. Выживать здесь значительно тяжелее, но при этом в разы интереснее!`;
+							break;
+												case "survival":
+							image = `/assets/images/data/minigames/splash.png`;
+							serverlink = `
+														/servers/survival
+														`;
+							description = `Survival – сервера, на которых ты сможешь отдохнуть от крафтов и бесконечного развития. Тут ждут тебя ванильные сервера без модификаций!`;
+							break;
+												default:
+							// statements_def
+							break;
+					}
+					$(".server-info").css("background-image",`url("${image}")`);
+					$("#serverlink").attr("href",serverlink);
+					$(".server-description-alter").html(description);
+				}
+				else
+				{
+					$(this).removeClass("fired");
+				}
+			})
+		}
+	</script>
+		<section class="footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-2 break">
+					<a href="https://mcskill.net/" target="_blank">Новости</a>
+					<a href="https://mcskill.net/mcforum/" target="_blank">Форум</a>
+					<a href="https://mcskill.net/?page=shop-info" target="_blank">Донат</a>
+				</div>
+				<div class="col-lg-2 break">
+					<a href="https://mcskill.net/?page=admin" target="_blank">Команда</a>
+					<a href="https://vk.me/mcskill" target="_blank">Тех поддержка</a>
+					<a href="https://mcskill.net/?page=faq&mode=rules" target="_blank">Правила</a>
+				</div>
+				<div class="col-lg-8">
+					<div class="row" style="margin-bottom: 24px;">
+						<div class="col-lg-12 d-block">
+							<a style="float: right" href="https://mcskill.net/" target="_blank" class="icon web"></a>
+							<a style="float: right" href="https://vk.com/mcskill" target="_blank" class="icon vk"></a>
+							<a style="float: right" href="https://discord.su/mcskill" target="_blank" class="icon discord"></a>
+						</div>
+					</div>
+					<div class="row">
+						<div style="display:flex; gap: 12px; justify-content: end" class="col-lg-12">
+							<!-- Yandex.Metrika informer --> <a style="float: right;margin-left: 14px;" href="https://metrika.yandex.ru/stat/?id=22707028&amp;from=informer" target="_blank" rel="nofollow"><img src="https://informer.yandex.ru/informer/22707028/3_0_FFFFFFFF_FFFFFFFF_0_pageviews" style="width:88px; height:31px; border:0;" alt="Яндекс.Метрика" title="Яндекс.Метрика: данные за сегодня (просмотры, визиты и уникальные посетители)" class="ym-advanced-informer" data-cid="22707028" data-lang="ru" /></a> <!-- /Yandex.Metrika informer --> <!-- Yandex.Metrika counter --> <script type="text/javascript" > (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)}; m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)}) (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym"); ym(22707028, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true, trackHash:true }); </script> <noscript><div style="float: right"><img src="https://mc.yandex.ru/watch/22707028" style="position:absolute; left:-9999px;" alt="" /></div></noscript> <!-- /Yandex.Metrika counter -->
+							<!--LiveInternet counter-->
+                    		<script type="text/javascript">document.write("<a style='float: right' href='https://www.liveinternet.ru/?mcskill.net' target=_blank><img src='//counter.yadro.ru/hit?t14.15;r" + escape(document.referrer) + ((typeof(screen)=="undefined")?"":";s"+screen.width+"*"+screen.height+"*"+(screen.colorDepth?screen.colorDepth:screen.pixelDepth)) + ";u" + escape(document.URL) + ";" + Math.random() + "' border=0 width=88 height=31 alt='' title='LiveInternet: показано число просмотров за 24 часа, посетителей за 24 часа и за сегодня'><\/a>")
+                			</script>
+                            <!--/LiveInternet-->
+
+                            <!-- Global site tag (gtag.js) - Google Analytics -->
+                            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-47516601-3"></script>
+                            <script>
+                              window.dataLayer = window.dataLayer || [];
+                              function gtag(){dataLayer.push(arguments);}
+                              gtag('js', new Date());
+
+                              gtag('config', 'UA-47516601-3');
+                            </script>
+
+							<!-- Top100 (Kraken) Counter -->
+							<span id="top100_widget"><a href="https://top100.rambler.ru/home?id=2953038" target="_blank"><img src="https://kraken.rambler.ru/cnt/?et=pv&amp;pid=2953038&amp;rid=1656622022.919-116811615&amp;tid=t1.7234768.928513503.1655238126111&amp;v=3.1.1&amp;exp=exp_bot%2Csplit_b%2Cexp_ping%2Cno&amp;ct=web&amp;aduid=b8161dd0-6471-4f0b-bba0-746fbec37eba&amp;aduidsc=mcskill.net&amp;rn=1224699212&amp;bs=1920x873&amp;ce=1&amp;rf=https%3A%2F%2Fmcskill.net%2F&amp;en=375&amp;pt=%D0%9A%D0%B0%D1%82%D0%B5%D0%B3%D0%BE%D1%80%D0%B8%D0%B8%20%D0%B8%20%D1%80%D0%B0%D0%B7%D0%B4%D0%B5%D0%BB%D1%8B%20-%20McSkill%20-%20MineCraft%20%D0%A4%D0%BE%D1%80%D1%83%D0%BC&amp;sr=1920x1080&amp;cd=30-bit&amp;la=ru-RU&amp;ja=0&amp;acn=Mozilla&amp;an=Netscape&amp;pl=MacIntel&amp;tz=-360&amp;sv&amp;lv=1656600354430%253A%253A1656621954430&amp;le=0&amp;url=https%3A%2F%2Fmcskill.net%2Fmcforum%2F&amp;eid=2711220229283560&amp;meta=%7B%22is_first%22%3A%201%7D&amp;stid=1784964851_1656622022925&amp;sn=4&amp;sen=1&amp;fid=pA8AAENKs1dyt%2F38ARML%2BAA%3D&amp;fip=pA8AAENKs1eglNsSAdVUNAA%3D" title="Rambler's Top100" alt="Rambler's Top100" border="0"></a></span>
+							<script> (function (w, d, c) { (w[c] = w[c] || []).push(function() { var options = { project: 7234768, }; try { w.top100Counter = new top100(options); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//st.top100.ru/top100/top100.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(window, document, "_top100q"); </script> <noscript> <img src="//counter.rambler.ru/top100.cnt?pid=7234768" alt="Топ-100" /> </noscript>
+							<!-- END Top100 (Kraken) Counter -->
+                    	</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	</body>
